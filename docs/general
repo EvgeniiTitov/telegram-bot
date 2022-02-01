@@ -1,0 +1,23 @@
+Bots are third-party applications that run inside Telegram. Users can interact
+with bots by sending them messages, commands and inline requests. You control
+your bots using HTTPS requests to Telegram's Bot API.
+
+Bot API - The Bot API is an HTTP-based interface created for developers keen
+on building bots for Telegram.
+
+Capabilities:
+1. Customized notifications and news
+2. Provide content from other platforms
+3. Custom tools (weather, translations etc)
+4. Anything
+
+
+How bots work:
+https://core.telegram.org/bots#6-botfather
+
+Messages, commands and requests sent by users are passed to the software
+running on your servers. Our intermediary server handles all encryption and
+communication with the Telegram API for you. You communicate with this server
+via a simple HTTPS-interface that offers a simplified version of the Telegram API.
+
+Inline bots:
