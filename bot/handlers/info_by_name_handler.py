@@ -5,7 +5,7 @@ import aiohttp
 from aiogram import types
 
 from bot.utils import make_request
-from bot.command_handlers._logger import logger
+from bot.handlers._logger import logger
 
 
 __all__ = "get_info_by_name"
