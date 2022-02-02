@@ -1,13 +1,13 @@
 import asyncio
 
 import aiohttp
-from aiogram import types
+from aiogram import types, Bot
 
 from bot.utils import make_request
 from bot.handlers._logger import logger
 
 
-__all__ = "get_crypto_prices"
+__all__ = ("get_crypto_prices", "get_crypto_prices_scheduled")
 
 
 _URL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin"
@@ -41,3 +41,8 @@ async def get_crypto_prices(message: types.Message) -> None:
         else "API call returned nothing"
     )
     await message.answer(reply)
+
+
+async def get_crypto_prices_scheduled(bot: Bot) -> None:
+    logger.info("Sending automatic message about crypto prices")
+    await bot.send_message(chat_id=378612721, text="Automatic message test")
