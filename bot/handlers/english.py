@@ -26,6 +26,7 @@ async def get_word_meaning(message: types.Message) -> None:
     logger.info(f"<< GET_WORD_MEANING >> called with word: {word}")
     if not word:
         await message.answer("No word provided")
+        return
     session = await message.bot.get_session()
     response_raw = await make_get_request(
         session, _URL.format(word=word), return_type="json"
