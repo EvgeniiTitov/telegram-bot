@@ -43,12 +43,12 @@ async def run_bot() -> None:
     scheduler = AsyncIOScheduler()
     logger.info("Bot and Scheduler created")
     register_scheduler_handlers(scheduler, bot)
-    logger.info("Registered handlers with the Scheduler")
+    logger.info("Registered automatic handlers with the Scheduler")
     try:
         scheduler.start()
         dp = Dispatcher(bot)
         register_handlers(dp)
-        logger.info("Registered handlers with the Dispatcher")
+        logger.info("Registered user triggered handlers with the Dispatcher")
         await dp.start_polling()
     finally:
         await bot.session.close()
