@@ -31,7 +31,7 @@ def register_handlers(dp: Dispatcher) -> None:
 def register_scheduler_handlers(scheduler: AsyncIOScheduler, bot: Bot) -> None:
     scheduler.add_job(
         func=get_crypto_prices_scheduled,
-        trigger=IntervalTrigger(seconds=10),
+        trigger=IntervalTrigger(minutes=5),
         args=(bot,),
         kwargs={},
         name="Test",

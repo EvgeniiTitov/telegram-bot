@@ -1,10 +1,8 @@
-import asyncio
-
-import aiohttp
 from aiogram import types, Bot
 
 from bot.utils import make_request
 from bot.handlers._logger import logger
+from config import Config
 
 
 __all__ = ("get_crypto_prices", "get_crypto_prices_scheduled")
@@ -16,33 +14,50 @@ _URL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitco
 """
 TODO:
 1. Ability to specify which crypto price to get?
+2. Scheduled: ADA, BTC, DOT (add more cryptos)
+
 2. Meaningful logging
 """
 
 
 async def get_crypto_prices(message: types.Message) -> None:
-    session = await message.bot.get_session()
     logger.info("Doing API call for crypto prices")
-    try:
-        response = await asyncio.wait_for(
-            make_request(session=session, url=_URL, return_type="json"),
-            timeout=5.0,
-        )
-    except asyncio.TimeoutError:
-        logger.exception(f"Timed-out while calling {_URL}")
-        return None
-    except aiohttp.ClientError as e:
-        logger.exception(f"Request to {_URL} failed with error: {e}")
-        return None
+    session = await message.bot.get_session()
+    result = await make_request(session, _URL, return_type="json")
+    if not result:
+        await message.answer("Crypto API call returned nothing")
+
     logger.info("Crypto API call was successful")
-    reply = (
-        response[0]["current_price"]
-        if response
-        else "API call returned nothing"
-    )
-    await message.answer(reply)
+    try:
+        reply = "BTC price: $" + str(result[0]["current_price"])
+    except Exception as e:
+        logger.exception(
+            f"Failed to extract price from API response. Error: {e}"
+        )
+        await message.answer("Error - Failed to extra price from API response")
+    else:
+        await message.answer(reply)
 
 
 async def get_crypto_prices_scheduled(bot: Bot) -> None:
-    logger.info("Sending automatic message about crypto prices")
-    await bot.send_message(chat_id=378612721, text="Automatic message test")
+    logger.info("Automatic crypto price check triggered. Checking the price")
+    session = await bot.get_session()
+    result = await make_request(session, _URL, return_type="json")
+    if not result:
+        await _send_message(bot, "Auto crypto API call returned nothing")
+    logger.info("Automatic crypto API call was successful")
+    try:
+        reply = "BTC price: $" + str(result[0]["current_price"])
+    except Exception as e:
+        logger.exception(
+            f"Failed to extract price from API response. Error: {e}"
+        )
+        await _send_message(
+            bot, "Error - Failed to extra price from API response"
+        )
+    else:
+        await _send_message(bot, reply)
+
+
+async def _send_message(bot: Bot, message: str) -> None:
+    await bot.send_message(chat_id=Config.EUGENE_CHAT_ID, text=message)

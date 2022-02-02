@@ -9,3 +9,5 @@ class Config:
         if not Config._TOKEN:
             raise EnvironmentError("Provide TELEGRAM_TOKEN env variable")
         return Config._TOKEN
+
+    EUGENE_CHAT_ID = 378612721

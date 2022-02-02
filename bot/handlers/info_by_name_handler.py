@@ -1,10 +1,8 @@
-import asyncio
 import typing as t
 
-import aiohttp
 from aiogram import types
 
-from bot.utils import make_request
+from bot.utils import make_requests
 from bot.handlers._logger import logger
 
 
@@ -19,28 +17,8 @@ _URLS = [
 
 
 """
-Thats for test I dont care
+That's for test I don't care
 """
-
-
-async def _make_requests(
-    session: aiohttp.ClientSession, query_params: t.MutableMapping[str, str]
-) -> t.Any:
-    requests_coro = asyncio.gather(
-        *(
-            make_request(
-                session, url.format(**query_params), return_type="json"
-            )
-            for url in _URLS
-        ),
-        return_exceptions=True,
-    )
-    try:
-        responses = await asyncio.wait_for(requests_coro, timeout=5.0)
-    except asyncio.TimeoutError:
-        print("Timed-out")
-        return None
-    return responses
 
 
 def _construct_response_from_json(api_response: t.Sequence[dict]) -> dict:
@@ -62,7 +40,9 @@ async def get_info_by_name(message: types.Message) -> None:
         await message.answer("No name provided")
     session = await message.bot.get_session()
     logger.info("Calling info by name APIs")
-    response_raw = await _make_requests(session, query_params={"name": name})
+    response_raw = await make_requests(
+        session, _URLS, url_params={"name": name}, return_type="json"
+    )
     response = _construct_response_from_json(response_raw)
     logger.info(f"Info by name API result: {response}")
     await message.answer(str(response))

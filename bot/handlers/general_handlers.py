@@ -13,4 +13,4 @@ async def send_welcome(message: types.Message):
 
 
 async def echo(message: types.Message):
-    await message.answer(message.text)
+    await message.answer("Echo: " + message.text)
