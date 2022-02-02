@@ -6,7 +6,7 @@ import aiohttp
 from bot.utils.logger import Logger
 
 
-__all__ = ("make_request", "make_requests")
+__all__ = ("make_get_request", "make_get_requests")
 
 
 """
@@ -14,10 +14,10 @@ TODO:
 1. Implement retrying
 """
 
-logger = Logger(__file__)
+logger = Logger("http_utils_logger")
 
 
-async def _make_request(
+async def _make_get_request(
     session: aiohttp.ClientSession, url: str, return_type="text", **kwargs
 ) -> t.Union[str, dict]:
     response = await session.get(url, **kwargs)
@@ -29,7 +29,7 @@ async def _make_request(
     )
 
 
-async def make_request(
+async def make_get_request(
     session: aiohttp.ClientSession,
     url: str,
     timeout: float = 30.0,
@@ -41,7 +41,8 @@ async def make_request(
     logger.info(f"Calling url {url}")
     try:
         result = await asyncio.wait_for(
-            _make_request(session, url, return_type, **kwargs), timeout=timeout
+            _make_get_request(session, url, return_type, **kwargs),
+            timeout=timeout,
         )
     except asyncio.TimeoutError:
         logger.exception(f"Timed-out while calling {url}")
@@ -53,7 +54,7 @@ async def make_request(
     return result
 
 
-async def make_requests(
+async def make_get_requests(
     session: aiohttp.ClientSession,
     urls: t.Sequence[str],
     url_params: t.Optional[t.MutableMapping[str, str]] = None,
@@ -66,7 +67,9 @@ async def make_requests(
     if not url_params:
         url_params = dict()
     coros = [
-        _make_request(session, url.format(**url_params), return_type, **kwargs)
+        _make_get_request(
+            session, url.format(**url_params), return_type, **kwargs
+        )
         for url in urls
     ]
     gathered_coro = asyncio.gather(*coros, return_exceptions=True)

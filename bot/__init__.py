@@ -8,6 +8,7 @@ from bot.handlers import (
     get_crypto_prices,
     get_crypto_prices_scheduled,
     get_info_by_name,
+    get_word_meaning,
     echo,
     send_welcome,
 )
@@ -25,6 +26,7 @@ def register_handlers(dp: Dispatcher) -> None:
     dp.register_message_handler(send_welcome, commands=["start", "hello"])
     dp.register_message_handler(get_crypto_prices, commands=["cryptoprice"])
     dp.register_message_handler(get_info_by_name, commands=["infoaboutme"])
+    dp.register_message_handler(get_word_meaning, commands=["wordmeaning"])
     dp.register_message_handler(echo)
 
 

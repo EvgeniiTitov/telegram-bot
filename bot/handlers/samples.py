@@ -2,7 +2,7 @@ import typing as t
 
 from aiogram import types
 
-from bot.utils import make_requests
+from bot.utils import make_get_requests
 from bot.handlers._logger import logger
 
 
@@ -40,7 +40,7 @@ async def get_info_by_name(message: types.Message) -> None:
         await message.answer("No name provided")
     session = await message.bot.get_session()
     logger.info("Calling info by name APIs")
-    response_raw = await make_requests(
+    response_raw = await make_get_requests(
         session, _URLS, url_params={"name": name}, return_type="json"
     )
     response = _construct_response_from_json(response_raw)

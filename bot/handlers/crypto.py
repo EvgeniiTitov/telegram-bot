@@ -1,6 +1,6 @@
 from aiogram import types, Bot
 
-from bot.utils import make_request
+from bot.utils import make_get_request
 from bot.handlers._logger import logger
 from config import Config
 
@@ -23,7 +23,7 @@ TODO:
 async def get_crypto_prices(message: types.Message) -> None:
     logger.info("Doing API call for crypto prices")
     session = await message.bot.get_session()
-    result = await make_request(session, _URL, return_type="json")
+    result = await make_get_request(session, _URL, return_type="json")
     if not result:
         await message.answer("Crypto API call returned nothing")
 
@@ -42,7 +42,7 @@ async def get_crypto_prices(message: types.Message) -> None:
 async def get_crypto_prices_scheduled(bot: Bot) -> None:
     logger.info("Automatic crypto price check triggered. Checking the price")
     session = await bot.get_session()
-    result = await make_request(session, _URL, return_type="json")
+    result = await make_get_request(session, _URL, return_type="json")
     if not result:
         await _send_message(bot, "Auto crypto API call returned nothing")
     logger.info("Automatic crypto API call was successful")
