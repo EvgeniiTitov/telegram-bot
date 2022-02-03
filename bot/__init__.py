@@ -7,6 +7,7 @@ from apscheduler.triggers.interval import IntervalTrigger
 from bot.handlers import (
     get_crypto_prices,
     get_crypto_prices_scheduled,
+    get_current_weather_scheduled,
     get_info_by_name,
     get_word_meaning,
     echo,
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-TOKEN = Config().token
+TOKEN = Config.telegram_token()
 
 
 def register_handlers(dp: Dispatcher) -> None:
@@ -35,8 +36,13 @@ def register_scheduler_handlers(scheduler: AsyncIOScheduler, bot: Bot) -> None:
         func=get_crypto_prices_scheduled,
         trigger=IntervalTrigger(minutes=5),
         args=(bot,),
-        kwargs={},
-        name="Test",
+        name="crypto",
+    )
+    scheduler.add_job(
+        func=get_current_weather_scheduled,
+        trigger=IntervalTrigger(minutes=5),
+        args=(bot,),
+        name="weather",
     )
 
 

@@ -4,16 +4,12 @@ from aiogram import types
 
 from bot.utils import make_get_requests
 from bot.handlers._logger import logger
-
+from config import Config
 
 __all__ = "get_info_by_name"
 
 
-_URLS = [
-    "https://api.agify.io?name={name}",
-    "https://api.genderize.io?name={name}",
-    "https://api.nationalize.io?name={name}",
-]
+URLS = Config.TEST_URLS
 
 
 """
@@ -38,10 +34,11 @@ async def get_info_by_name(message: types.Message) -> None:
     logger.info(f"Get info by name called with name {name}")
     if not name:
         await message.answer("No name provided")
+    await types.ChatActions.typing()
     session = await message.bot.get_session()
     logger.info("Calling info by name APIs")
     response_raw = await make_get_requests(
-        session, _URLS, url_params={"name": name}, return_type="json"
+        session, URLS, url_params={"name": name}, return_type="json"
     )
     response = _construct_response_from_json(response_raw)
     logger.info(f"Info by name API result: {response}")

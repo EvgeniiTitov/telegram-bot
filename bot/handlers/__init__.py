@@ -5,3 +5,4 @@ from .crypto import (
 from .samples import get_info_by_name
 from .general import send_welcome, echo
 from .english import get_word_meaning
+from .weather import get_current_weather_scheduled
