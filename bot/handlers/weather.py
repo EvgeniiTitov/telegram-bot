@@ -46,7 +46,7 @@ def _parse_api_response(api_response: t.Union[str, dict]) -> dict:
         "Condition": api_response["current"]["condition"]["text"],
         "Wind": api_response["current"]["wind_kph"],
         "Humidity": api_response["current"]["humidity"],
-        "UV": api_response["current"]["uv"]
+        "UV": api_response["current"]["uv"],
     }
 
 
